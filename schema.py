@@ -165,7 +165,6 @@ class EditProfile(Mutation):
         picture_url = String()
 
     ok = Boolean()
-    profile = Field(lambda: ProfileType)
 
     def mutate(root, info, first_name=None, last_name=None, picture_url=None):
         # if I use it onlt i should use this --> info.context.args.get('userid')
@@ -182,7 +181,7 @@ class EditProfile(Mutation):
         db.session.commit()
         ok = True
 
-        return EditProfile(ok=ok, profile=profile)
+        return EditProfile(ok=ok)
 
 
 class Update(Mutation):

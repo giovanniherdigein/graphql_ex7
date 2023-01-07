@@ -25,6 +25,7 @@ MarkupSafe==2.1.1
 promise==2.3
 pycodestyle==2.10.0
 python-dotenv==0.21.0
+pyuwsgi==2.0.21
 Rx==1.6.3
 singledispatch==3.7.0
 six==1.16.0
