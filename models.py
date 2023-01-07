@@ -41,7 +41,7 @@ class User(UserMixin, db.Model):
 
     # @classmethod
     def get_profile(self):
-        profile = Profile.query.filter_by(userid=self.id).first()
+        profile = Profile.query.filter_by(userid=self.id).last()
         return profile
 
     def get_id(self):

@@ -12,6 +12,7 @@
         </div>
         <div class="g-3 p-3">
             <form enctype="multipart/form-data" action="" method="POST" class="form">
+                <input type="hidden" name="_method" value="POST">
                 <div class="col-auto">
                     <label for="firstname" class="col-form-label">First name</label>
                 </div>
@@ -65,7 +66,8 @@
             <h3 class="ml-2 p-3">Edit Profile</h3>
         </div>
         <div class="g-3 p-3">
-            <form action="" method="POST" class="form">
+            <form enctype="multipart/form-data" action="" method="POST" class="form">
+                <input type="hidden" name="_method" value="PUT">
                 <div class="col-auto">
                     <label for="firstname" class="col-form-label">First name</label>
                 </div>
@@ -97,7 +99,7 @@
                     <label for="pic_url" class="col-form-label">Profile picture</label>
                 </div>
                 <div class="col-auto">
-                    <input type="file" name="picture" placeholder="picture" class="form-control"
+                    <input type="file" name="file" placeholder="picture" class="form-control"
                         value="{{current_user.profile.picture}}" />
                 </div>
                 <div class="col-auto">

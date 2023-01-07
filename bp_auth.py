@@ -29,6 +29,36 @@ mutation registerUser($username:String!,$email:String!,$pw1:String!,$pw2:String!
     }
 }
 '''
+upload_query = '''
+    mutation uploadPicture($file:Upload!){
+        uploadPicture(file:$file){
+            ok
+            filename
+        }
+    }
+'''
+create_query = '''
+mutation ($firstname:String!,$lastname:String!,$picture:String!){
+  addProfile(firstName:$firstname,lastName:$lastname,pictureUrl:$picture){
+    ok
+    profile{
+      userid
+      firstName
+    }
+  }
+}
+'''
+edit_query = '''
+mutation ($firstname:String!,$lastname:String!,$picture:String!){
+  editProfile(firstName:$firstname,lastName:$lastname,pictureUrl:$picture){
+    ok
+    profile{
+      userid
+      firstName
+    }
+  }
+}
+'''
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -79,43 +109,45 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-upload_query = '''
-    mutation uploadPicture($file:Upload!){
-        uploadPicture(file:$file){
-            ok
-            filename
-        }
-    }
-'''
-create_query = '''
-mutation ($firstname:String!,$lastname:String!,$picture:String!){
-  addProfile(firstName:$firstname,lastName:$lastname,pictureUrl:$picture){
-    ok
-    profile{
-      userid
-      firstName
-    }
-  }
-}
-'''
-
-
 @auth.route('/createprofile', methods=['GET', 'POST'])
 @login_required
 def create_profile():
     if request.method == 'POST':
-        upl_result = schema.execute(
-            upload_query, variable_values={'file': request.files['file']}, root_value=current_user)
-        filename = upl_result.data['uploadPicture']['filename']
-        create_result = schema.execute(
-            create_query, variable_values={
-                'firstname': request.form['firstname'],
-                'lastname': request.form['lastname'],
-                'picture': filename,
-            }, root_value=current_user)
-        outcome = create_result
-        if outcome.errors:
-            print(outcome.errors)
-        else:
-            print(outcome.data['addProfile']['ok'])
+        if request.form['_method'] == 'POST':
+            upl_result = schema.execute(
+                upload_query, variable_values={'file': request.files['file']}, root_value=current_user)
+            filename = upl_result.data['uploadPicture']['filename']
+            create_result = schema.execute(
+                create_query, variable_values={
+                    'firstname': request.form['firstname'],
+                    'lastname': request.form['lastname'],
+                    'picture': filename,
+                }, root_value=current_user)
+            outcome = create_result
+            current_user.profile.picture = filename
+            if outcome.errors:
+                print(outcome.errors)
+            else:
+                print(outcome.data['addProfile']['ok'])
+                return redirect(url_for('main.profile'))
+        elif request.form['_method'] == 'PUT':
+            if request.files['file']:
+                upl_result = schema.execute(
+                    upload_query, variable_values={'file': request.files['file']}, root_value=current_user)
+                filename = upl_result.data['uploadPicture']['filename']
+            else:
+                filename = current_user.profile.picture
+
+            edit_result = schema.execute(
+                edit_query, variable_values={
+                    'firstname': request.form['firstname'],
+                    'lastname': request.form['lastname'],
+                    'picture': filename,
+                }, root=current_user)
+            outcome = edit_result
+            if outcome.errors:
+                print(outcome.errors)
+            else:
+                print(outcome.data['editProfile']['ok'])
+                return redirect(url_for('main.profile'))
     return render_template('create_profile.html')

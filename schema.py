@@ -157,6 +157,34 @@ class AddProfile(Mutation):
         return AddProfile(ok=ok, profile=profile)
 
 
+class EditProfile(Mutation):
+    class Arguments:
+        userid = Int()
+        first_name = String()
+        last_name = String()
+        picture_url = String()
+
+    ok = Boolean()
+    profile = Field(lambda: ProfileType)
+
+    def mutate(root, info, first_name=None, last_name=None, picture_url=None):
+        # if I use it onlt i should use this --> info.context.args.get('userid')
+        # uid = root.id
+        # profile = Profile.query.filter_by(uid=uid).first()
+        # if not profile == None:
+        if not first_name == None and not first_name == root.profile.first_name:
+            root.profile.first_name = first_name
+        if not last_name == None and not last_name == root.profile.last_name:
+            root.profile.last_name = last_name
+        if not picture_url == None and not picture_url == root.profile.picture:
+            root.profile.picture = picture_url
+
+        db.session.commit()
+        ok = True
+
+        return EditProfile(ok=ok, profile=profile)
+
+
 class Update(Mutation):
     class Arguments:
         id = ID(required=True)
@@ -203,7 +231,8 @@ class UploadPicture(Mutation):
 
 
 class Mutation(ObjectType):
-    add_profile = AddProfile.Field()
+    add_profile = AddProfile.Field(description="Adds a profile to a user")
+    edit_profile = EditProfile.Field(description="Edits the profile ")
     upload_picture = UploadPicture.Field(
         description="Uploads a file to the system")
     login_user = Login.Field()
