@@ -1,0 +1,9 @@
+ul.flash {
+  display: block;
+  list-style-type: none;
+}
+ul.flash li {
+  display: inline-block;
+}
+
+/*# sourceMappingURL=extra.css.map */

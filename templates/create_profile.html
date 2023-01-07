@@ -1,0 +1,122 @@
+{%extends 'layouts/auth_layout.html'%}
+
+
+{%block content%}
+<!-- ############################################################################################## -->
+{%if current_user.profile == None %}
+<div class="row align-items-center">
+
+    <div class=" row-cols mt-5 col-md-3 mx-auto  border border-1 g-0">
+        <div class="col bg-primary text-white">
+            <h3 class="ml-2 p-3">Add Profile</h3>
+        </div>
+        <div class="g-3 p-3">
+            <form enctype="multipart/form-data" action="" method="POST" class="form">
+                <div class="col-auto">
+                    <label for="firstname" class="col-form-label">First name</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="firstname" placeholder="First name" class="form-control"
+                        aria-describedby="emailHelpInline">
+                </div>
+                <div class="col-auto">
+                    <!-- <span id="emailHelpInline" class="form-text">
+                        Must be a real email address.
+                    </span> -->
+                </div>
+                <!-- ############# -->
+                <div class="col-auto">
+                    <label for="lastname" class="col-form-label">Last name</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="lastname" placeholder="Last Name" class="form-control"
+                        aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                    <!-- <span id="passwordHelpInline" class="form-text">
+                        Must be 8-20 characters long.
+                    </span> -->
+                </div>
+                <!-- ############# -->
+
+                <div class="col-auto">
+                    <label for="pic_url" class="col-form-label">Profile picture</label>
+                </div>
+                <div class="col-auto">
+                    <input type="file" name="file" placeholder="profile picture" class="form-control"
+                        aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                    <!-- <span id="passwordHelpInline" class="form-text">
+                                        Must be 8-20 characters long.
+                                    </span> -->
+                    <input type="submit" class="btn btn-primary mt-3" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%else%}
+<!-- #################################################################################################### -->
+<div class="row align-items-center">
+
+    <div class=" row-cols mt-5 col-md-3 mx-auto  border border-1 g-0">
+        <div class="col bg-primary text-white">
+            <h3 class="ml-2 p-3">Edit Profile</h3>
+        </div>
+        <div class="g-3 p-3">
+            <form action="" method="POST" class="form">
+                <div class="col-auto">
+                    <label for="firstname" class="col-form-label">First name</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="firstname" placeholder="first name" class="form-control"
+                        aria-describedby="emailHelpInline" value={{current_user.profile.first_name}}>
+                </div>
+                <div class="col-auto">
+                    <!-- <span id="emailHelpInline" class="form-text">
+                        Must be a real email address.
+                    </span> -->
+                </div>
+                <!-- ############# -->
+                <div class="col-auto">
+                    <label for="lastname" class="col-form-label">Last name</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="lastname" placeholder="Last Name" class="form-control"
+                        aria-describedby="passwordHelpInline" value="{{current_user.profile.last_name}}">
+                </div>
+                <div class="col-auto">
+                    <!-- <span id="passwordHelpInline" class="form-text">
+                        Must be 8-20 characters long.
+                    </span> -->
+                </div>
+                <!-- ############# -->
+
+                <div class="col-auto">
+                    <label for="pic_url" class="col-form-label">Profile picture</label>
+                </div>
+                <div class="col-auto">
+                    <input type="file" name="picture" placeholder="picture" class="form-control"
+                        value="{{current_user.profile.picture}}" />
+                </div>
+                <div class="col-auto">
+                    <!-- <span id="passwordHelpInline" class="form-text">
+                                        Must be 8-20 characters long.
+                                    </span> -->
+                    <input type="submit" class="btn btn-primary mt-3" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endif%}
+<!-- ######################################################################################################## -->
+{%endblock%}
+
+{%block scripts%}
+<script>
+
+
+</script>
+{%endblock%}

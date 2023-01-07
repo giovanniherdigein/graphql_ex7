@@ -1,0 +1,9 @@
+{%extends 'layouts/main_layout.html'%}
+
+{%block content%}
+<h1>Flask GraphQL Test</h1>
+<h3>A simple but elegant way to try out things</h3>
+{% if current_user.is_authenticated %}
+Hi {{ current_user.username|upper }}!
+{% endif %}
+{%endblock%}

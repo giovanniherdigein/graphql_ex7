@@ -1,0 +1,42 @@
+{%extends 'layouts/login_layout.html'%}
+
+{%block content%}
+<div class="row align-items-center">
+
+    <div class=" row-cols mt-5 col-md-3 mx-auto  border border-1 g-0">
+        <div class="col bg-primary text-white">
+            <h3 class="ml-2 p-3">Login</h3>
+        </div>
+        <div class="g-3 p-3">
+            <form action="" method="POST" class="form">
+                <div class="col-auto">
+                    <label for="email" class="col-form-label">Email</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="email" placeholder="Email" class="form-control"
+                        aria-describedby="emailHelpInline">
+                </div>
+                <div class="col-auto">
+                    <span id="emailHelpInline" class="form-text">
+                        Must be a real email address.
+                    </span>
+                </div>
+                <!-- ############3 -->
+                <div class="col-auto">
+                    <label for="inputPassword6" class="col-form-label">Password</label>
+                </div>
+                <div class="col-auto">
+                    <input type="password" name="password" placeholder="Password" class="form-control"
+                        aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                    <span id="passwordHelpInline" class="form-text">
+                        Must be 8-20 characters long.
+                    </span>
+                </div>
+                <input type="submit" class="btn btn-primary btn-sm" value="Submit">
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}
