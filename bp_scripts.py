@@ -25,7 +25,7 @@ class TempUser(object):
         self.role = role
 
 
-@app.cli.command('bootstrap')
+@scripts.cli.command('bootstrap')
 def bootstrap():
     from getpass import getpass
     import sys
@@ -161,7 +161,7 @@ def bootstrap():
         print("\r\nFinished task!!\n")
 
 
-@app.cli.command('updProfile')
+@scripts.cli.command('updProfile')
 def update_profile():
     '''The string to manupulate the users profile looks lik this'''
     query_string = '''

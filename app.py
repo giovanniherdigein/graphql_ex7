@@ -8,7 +8,7 @@ from flask_login import LoginManager
 from dotenv import load_dotenv
 from bp_main import main as main_blueprint
 from bp_auth import auth as auth_blueprint
-# from bp_scripts import scripts as scripts_blueprint
+from bp_scripts import scripts as scripts_blueprint
 from config import db, bcrypt
 import os
 from os import getenv
@@ -60,7 +60,7 @@ mail = Mail(app)
 # registering the route blueprints
 app.register_blueprint(main_blueprint)
 app.register_blueprint(auth_blueprint)
-# app.register_blueprint(scripts_blueprint)
+app.register_blueprint(scripts_blueprint) # We can use this by calling the bp_name first like 'flask scripts bootstrap'
 
 
 @login_manager.user_loader
