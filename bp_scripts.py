@@ -10,6 +10,8 @@ from flask_bcrypt import Bcrypt
 scripts = Blueprint('scripts', __name__)
 
 bcrypt = Bcrypt()
+
+
 class TempUser(object):
     '''A TempUser as hepler to insert soome data in the database '''
     username = ""
@@ -31,21 +33,13 @@ def bootstrap():
     from config import db
     from getpass import getpass
     import sys
+    from models import (User, Role, Profile)
     '''
     Creates tables and inserts some data in them using graphql schema architecture
     '''
-    from models import (User, Role, Profile)
     db.drop_all()
     db.create_all()
     # fill the database with information
-    # super_user = Role('superuser')
-    # admin = Role("admin")
-    # usr = Role('user')
-    # db.session.add(admin)
-    # db.session.add(usr)
-    # db.session.add(super_user)
-    # db.session.commit()
-    # #####################
     # Let's try this to start using graphql as communication "ast" layer
     # to talk to our API
 
@@ -118,12 +112,12 @@ def bootstrap():
                     registerUser(username: $username, email:$email , password1: $password1, password2:$password2,role:$role){
                         ok
                         user {
-                        username
-                        email
-                        password
-                        role{
-                            title
-                        }
+                            username
+                            email
+                            password
+                            role{
+                                title
+                            }
                         }
                         message
                     }
@@ -165,7 +159,7 @@ def bootstrap():
 
 @scripts.cli.command('updProfile')
 def update_profile():
-    '''The string to manupulate the users profile looks lik this'''
+    '''The string to manupulate the users profile looks like this'''
     query_string = '''
         mutation addProfile($userid:Int,$firstName:String,
         $lastName:String,$picture:String) {
@@ -173,22 +167,20 @@ def update_profile():
             lastName: $lastName, picture: $picture){
                 ok
                 profile {
-                id
-                userid
-                firstName
-                lastName
-                lastUpdated
-                user{
                     id
-                    email
-                    role{
-                    title
+                    userid
+                    firstName
+                    lastName
+                    lastUpdated
+                    user{
+                        id
+                        email
+                        role{
+                        title
                     }
-                }
                 }
             }
         }
-
     '''
     variable_values = set_variables("Nina", "Simone", "Simone.png")
     user_root = set_root(5)

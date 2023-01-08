@@ -1,5 +1,5 @@
 from graphene import (String, relay, ObjectType, Context,
-                      Schema, Mutation, Boolean, Field, Int, ID, InputObjectType, InputField, Argument, ClientIDMutation)
+                      Schema, Mutation, Boolean, Field, Int, ID, InputObjectType, InputField, Argument)
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from models import (User, Role, Profile)
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -45,6 +45,8 @@ class Query(ObjectType):
 class AddRole(Mutation):
     class Arguments:
         title = String()
+
+    'Fields'
     ok = Boolean()
     role = Field(RoleType)
     message = String()
@@ -64,6 +66,7 @@ class Remove(Mutation):
     class Arguments:
         id = ID()
 
+    'Fields'
     ok = Boolean()
     user = Field(UserType)
     message = String()
@@ -86,6 +89,8 @@ class Register(Mutation):
         password1 = String()
         password2 = String()
         role = String()
+
+    'Fields'
     ok = Boolean()
     message = String()
     user = Field(UserType)
@@ -112,6 +117,8 @@ class Login(Mutation):
     class Arguments:
         email = String(required=True)
         password = String(required=True)
+
+    'Fields'
     user = Field(UserType)
     ok = Boolean()
     message = String()
@@ -143,6 +150,7 @@ class AddProfile(Mutation):
         last_name = String()
         picture_url = String()
 
+    'Fields'
     ok = Boolean()
     profile = Field(lambda: ProfileType)
 
@@ -164,6 +172,7 @@ class EditProfile(Mutation):
         last_name = String()
         picture_url = String()
 
+    'Fields'
     ok = Boolean()
 
     def mutate(root, info, first_name=None, last_name=None, picture_url=None):
@@ -215,7 +224,7 @@ class UploadPicture(Mutation):
         file = Upload(required=True)
         # pass
 
-    # ' Fields '
+    ' Fields '
     ok = Boolean()
     filename = String()
     # @classmethod

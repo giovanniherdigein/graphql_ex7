@@ -1,19 +1,17 @@
 #! /usr/bin/python
 
-from DictObj import DictObj
-import click
 from flask import Flask, request
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from dotenv import load_dotenv
 from bp_main import main as main_blueprint
 from bp_auth import auth as auth_blueprint
+from bp_admin import admin as admin_blueprint
 from bp_scripts import scripts as scripts_blueprint
 from config import db, bcrypt
-import os
 from os import getenv
+import os
 from models import User
-from schema import schema
 from datetime import timedelta
 from flask_mail import Mail
 
@@ -60,6 +58,7 @@ mail = Mail(app)
 # registering the route blueprints
 app.register_blueprint(main_blueprint)
 app.register_blueprint(auth_blueprint)
+app.register_blueprint(admin_blueprint, url_prefix='/admin')
 # We can use this by calling the bp_name first like 'flask scripts bootstrap'
 app.register_blueprint(scripts_blueprint)
 
