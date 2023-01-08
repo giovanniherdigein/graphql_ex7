@@ -3,12 +3,13 @@ import click
 from flask import Flask
 from schema import schema
 from flask import Blueprint
+from flask_bcrypt import Bcrypt
 
 # ik maak deze blueprint om commandline scripts te kunnen uitvoeren in app.app_context
 # ik heb hiermee toegang tot de wsgi server en kan met alle opties werken bijv. request, g, blueprints etc.etc
 scripts = Blueprint('scripts', __name__)
 
-
+bcrypt = Bcrypt()
 class TempUser(object):
     '''A TempUser as hepler to insert soome data in the database '''
     username = ""
@@ -27,6 +28,7 @@ class TempUser(object):
 
 @scripts.cli.command('bootstrap')
 def bootstrap():
+    from config import db
     from getpass import getpass
     import sys
     '''
