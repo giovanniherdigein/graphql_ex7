@@ -3,19 +3,35 @@
 {%block content%}
 <div class="row">
     {% if current_user.is_authenticated %}
-    <div class="aside col-md-2">
-
-        <h1>Hi {{ current_user.username|title }} !</h1>
-        <p>Ready for some action ?</p>
-        <a href="/createprofile">Create or Edit your profile</a><br>
-        <a href="/sendmail">Send a test mail</a>
+    <div class="aside col-md-2 border-end border-2 wh-100" style="height:100%">
+        <h2>Settings</h2>
+        <p>Gebruikers acties </p>
+        <ul class="side_bar">
+            <li><a href="/sendmail"><i class="fa-solid fa-envelope"></i> Send a test mail</a></li>
+            {%if not current_user.profile == None%}
+            <li> <a href="/createprofile"><i class="fa-solid fa-user"></i> Edit your profile</a></li>
+            {%else%}
+            <li><a href="/createprofile"><i class="fa-solid fa-user"></i> Create your profile</a></li>
+            {%endif%}
+            <li> <a href="#"><i class="fa-solid fa-lock"></i> Change Password</a></li>
+            <li> <a href="#"><i class="fa-solid fa-camera-retro"></i> Change Profile Picture</a></li>
+        </ul>
     </div>
     {% endif %}
     <div class="main col-md-9">
-        {%if not current_user.profile == None%}
+        <p class="text-secondary">
+            We hold these truths to be <del><em>sacred &amp; undeniable</em></del>
+            <ins>self-evident</ins>.
+        </p>
+        {%if current_user.profile == None %}
+        <h1>Your Profile is empty !<br>Create a profile</h1>
+        <a href="/createprofile" class="btn btn-primary">Create</a>
+        {%else%}
         <h1> {{current_user.profile.first_name}} {{current_user.profile.last_name}}</h1>
-        <img src="static/uploads/{{current_user.id}}/{{current_user.profile.picture}}/" width="100wh">
+        <img src="static/uploads/{{current_user.id}}/{{current_user.profile.picture}}/" width="100wh"><br>
         {%endif%}
+
+
     </div>
 </div>
 {%endblock%}

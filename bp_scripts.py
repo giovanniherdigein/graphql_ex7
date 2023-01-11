@@ -3,10 +3,14 @@ import click
 from flask import Flask
 from schema import schema
 from flask import Blueprint
+from flask_bcrypt import Bcrypt
+from flask_login import login_required
 
 # ik maak deze blueprint om commandline scripts te kunnen uitvoeren in app.app_context
 # ik heb hiermee toegang tot de wsgi server en kan met alle opties werken bijv. request, g, blueprints etc.etc
 scripts = Blueprint('scripts', __name__)
+
+bcrypt = Bcrypt()
 
 
 class TempUser(object):
@@ -27,23 +31,16 @@ class TempUser(object):
 
 @scripts.cli.command('bootstrap')
 def bootstrap():
+    from config import db
     from getpass import getpass
     import sys
+    from models import (User, Role, Profile)
     '''
     Creates tables and inserts some data in them using graphql schema architecture
     '''
-    from models import (User, Role, Profile)
     db.drop_all()
     db.create_all()
     # fill the database with information
-    # super_user = Role('superuser')
-    # admin = Role("admin")
-    # usr = Role('user')
-    # db.session.add(admin)
-    # db.session.add(usr)
-    # db.session.add(super_user)
-    # db.session.commit()
-    # #####################
     # Let's try this to start using graphql as communication "ast" layer
     # to talk to our API
 
@@ -116,12 +113,12 @@ def bootstrap():
                     registerUser(username: $username, email:$email , password1: $password1, password2:$password2,role:$role){
                         ok
                         user {
-                        username
-                        email
-                        password
-                        role{
-                            title
-                        }
+                            username
+                            email
+                            password
+                            role{
+                                title
+                            }
                         }
                         message
                     }
@@ -163,7 +160,7 @@ def bootstrap():
 
 @scripts.cli.command('updProfile')
 def update_profile():
-    '''The string to manupulate the users profile looks lik this'''
+    '''The string to manupulate the users profile looks like this'''
     query_string = '''
         mutation addProfile($userid:Int,$firstName:String,
         $lastName:String,$picture:String) {
@@ -171,22 +168,20 @@ def update_profile():
             lastName: $lastName, picture: $picture){
                 ok
                 profile {
-                id
-                userid
-                firstName
-                lastName
-                lastUpdated
-                user{
                     id
-                    email
-                    role{
-                    title
+                    userid
+                    firstName
+                    lastName
+                    lastUpdated
+                    user{
+                        id
+                        email
+                        role{
+                        title
                     }
-                }
                 }
             }
         }
-
     '''
     variable_values = set_variables("Nina", "Simone", "Simone.png")
     user_root = set_root(5)
@@ -225,3 +220,49 @@ def query_user(username):
     user = User.query.filter_by(username=username).first()
     print("Naam: %s, Email: %s\r\nPassword: %s" %
           (user.username, user.email, user.password))
+
+
+@scripts.route('/welcome')
+def welcome():
+    data = request.args
+    return render_template('welcome.html', data=data)
+
+
+@scripts.route('/sendmail')
+@login_required
+def send_mail():
+    msg = Message('Hello from the other side!',
+                  sender='<<info@example.org>>', recipients=['podakek531@cnxcoin.com'])
+    msg.body = "Hey Paul, This is another email to test and see ."
+    mail.send(msg)
+
+    return render_template('mail_return.html', message="Message sent succesfull")
+
+
+@scripts.cli.command('addPost')
+def addPost():
+    from models import (Post, Comments, User)
+    from config import db
+    admin = User.query.get(1)
+    post = Post(title='First of Admin',
+                body='The first entry of admin', userid=admin.id)
+    db.session.add(post)
+    db.session.commit()
+
+
+@scripts.cli.command('getPosts')
+def getPosts():
+    from models import Post
+    posts = Post.query.all()
+
+    for p in posts:
+        print(p.title)
+
+    print(30*'*')
+
+    last = Post.query.order_by(Post.id.desc()).first()
+    try:
+        assert last.title == "First of Admin"  # should be "First of Admin"
+        assert last.id == 2  # should be 3
+    except AssertionError as e:
+        print(e.__str__())

@@ -5,6 +5,7 @@ from models import User
 
 auth = Blueprint('auth', __name__)
 
+
 # auth ruotes are called using auth namespace 'auth.route'
 login_query = '''
 mutation loginUser($email:String!,$password:String!){
@@ -13,6 +14,7 @@ mutation loginUser($email:String!,$password:String!){
         user{
             id
             email
+            roleid
         }
     }   
 }
@@ -75,7 +77,10 @@ def login():
             print(result.errors)
         elif result.data['loginUser']['ok']:
             user = result.data['loginUser']['user']
-        return redirect(url_for('main.profile'))
+            if current_user.role.id == 2:
+                return redirect(url_for('admin.index'))
+            else:
+                return redirect(url_for('main.profile'))
     return render_template('login.html')
 
 

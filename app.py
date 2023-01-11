@@ -1,19 +1,17 @@
 #! /usr/bin/python
 
-from DictObj import DictObj
-import click
 from flask import Flask, request
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from dotenv import load_dotenv
 from bp_main import main as main_blueprint
 from bp_auth import auth as auth_blueprint
+from bp_admin import admin as admin_blueprint
 from bp_scripts import scripts as scripts_blueprint
 from config import db, bcrypt
-import os
 from os import getenv
+import os
 from models import User
-from schema import schema
 from datetime import timedelta
 from flask_mail import Mail
 
@@ -33,7 +31,7 @@ app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 # secret key settings
 app.config['SECRET_KEY'] = getenv("SECRET_KEY")
 # COOKIE SETTINGS
-app.config['REMEMBER_COOKIE_DURATION'] = 3600
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=360)
 app.config['SESSION_PERMANENT'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=360)
 # Here we'll make a few configurations for mail
@@ -46,7 +44,7 @@ app.config['MAIL_USE_SSL'] = True
 # Some config for file handeling
 app.config['UPLOAD_FOLDER'] = '/static/uploads/images/'
 app.config['MAX_CONTENT_PATH'] = 1024 * 1024
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif', 'svg', 'bmp']
 # initializing the database with the app in context
 db.init_app(app)
 # bcrypt to hash our passwords using sha256 method
@@ -60,7 +58,9 @@ mail = Mail(app)
 # registering the route blueprints
 app.register_blueprint(main_blueprint)
 app.register_blueprint(auth_blueprint)
-app.register_blueprint(scripts_blueprint) # We can use this by calling the bp_name first like 'flask scripts bootstrap'
+app.register_blueprint(admin_blueprint, url_prefix='/admin')
+# We can use this by calling the bp_name first like 'flask scripts bootstrap'
+app.register_blueprint(scripts_blueprint)
 
 
 @login_manager.user_loader

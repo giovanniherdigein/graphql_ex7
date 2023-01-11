@@ -8,11 +8,18 @@
         <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{{url_for('main.index')}}">Home</a>
                 </li>
                 {%if current_user.is_active%}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Chat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('main.profile')}}">Settings</a>
+                </li>
+                {%if current_user.role.id == 2 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('admin.index')}}">Admin</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -20,17 +27,16 @@
                         Actions
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Pricing</a></li>
-                        <li><a class="dropdown-item" href="#">Addition</a></li>
+                        <li><a class="dropdown-item" href="#">User Management</a></li>
+                        <li><a class="dropdown-item" href="#">Server Managent</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Subtraction</a></li>
+                        <li><a class="dropdown-item" href="#">Items Management</a></li>
+                        <li><a class="dropdown-item" href="#">Check Logs</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profile</a>
-                </li>
+                {%endif%}
                 {%endif%}
             </ul>
             {%if current_user.is_active%}

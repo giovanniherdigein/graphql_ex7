@@ -29,18 +29,4 @@ def profile():
     return render_template('profile.html')
 
 
-@main.route('/sendmail')
-@login_required
-def send_mail():
-    msg = Message('Hello from the other side!',
-                  sender='<<info@example.org>>', recipients=['podakek531@cnxcoin.com'])
-    msg.body = "Hey Paul, This is another email to test and see ."
-    mail.send(msg)
 
-    return render_template('mail_return.html', message="Message sent succesfull")
-
-
-@main.route('/welcome')
-def welcome():
-    data = request.args
-    return render_template('welcome.html', data=data)
