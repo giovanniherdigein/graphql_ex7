@@ -5,3 +5,23 @@ ul.flash {
         display: inline-block;
     }
 }
+ul.side_bar {
+    display: block;
+    list-style: none;
+    li {
+        display: block;
+        border-bottom: 1px dotted rgba(158, 158, 158, 0.6);
+        height: 2.2em;
+        line-height: 2.2em;
+        a {
+            display: block;
+            text-decoration: none;
+            height: 100%;
+            width: 100%;
+            font-size: 86%;
+        }
+        a:hover {
+            background-color: rgba(230, 226, 226, 0.3);
+        }
+    }
+}

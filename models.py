@@ -65,3 +65,33 @@ class Profile(db.Model):
 
     def __repr__(self):
         return f"<Profile of {self.first_name}>"
+
+
+user_comments = db.Table('user_comments',
+                         db.Column('post_id', db.Integer,
+                                   db.ForeignKey('post.id')),
+                         db.Column('comments_id', db.Integer,
+                                   db.ForeignKey('comments.id'))
+                         )
+
+
+class Post(db.Model):
+    __tablename__ = 'post'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String())
+    body = db.Column(db.Text)
+    date_created = db.Column(db.DateTime(), default=datetime.now())
+    userid = db.Column(db.Integer, db.ForeignKey(User.id))
+    user = db.relationship('User', backref='posts')
+
+
+class Comments(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String())
+    made_at = db.Column(db.DateTime, default=datetime.now())
+    postid = db.Column(db.Integer(), db.ForeignKey(Post.id))
+    posts = db.relationship('Post', secondary=user_comments, backref='posts')
+    userid = db.Column(db.Integer(), db.ForeignKey(User.id))
+    user = db.relationship('User', backref='comments',
+                           lazy='select')

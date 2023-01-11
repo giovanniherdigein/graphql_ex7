@@ -4,6 +4,7 @@ from flask import Flask
 from schema import schema
 from flask import Blueprint
 from flask_bcrypt import Bcrypt
+from flask_login import login_required
 
 # ik maak deze blueprint om commandline scripts te kunnen uitvoeren in app.app_context
 # ik heb hiermee toegang tot de wsgi server en kan met alle opties werken bijv. request, g, blueprints etc.etc
@@ -219,3 +220,49 @@ def query_user(username):
     user = User.query.filter_by(username=username).first()
     print("Naam: %s, Email: %s\r\nPassword: %s" %
           (user.username, user.email, user.password))
+
+
+@scripts.route('/welcome')
+def welcome():
+    data = request.args
+    return render_template('welcome.html', data=data)
+
+
+@scripts.route('/sendmail')
+@login_required
+def send_mail():
+    msg = Message('Hello from the other side!',
+                  sender='<<info@example.org>>', recipients=['podakek531@cnxcoin.com'])
+    msg.body = "Hey Paul, This is another email to test and see ."
+    mail.send(msg)
+
+    return render_template('mail_return.html', message="Message sent succesfull")
+
+
+@scripts.cli.command('addPost')
+def addPost():
+    from models import (Post, Comments, User)
+    from config import db
+    admin = User.query.get(1)
+    post = Post(title='First of Admin',
+                body='The first entry of admin', userid=admin.id)
+    db.session.add(post)
+    db.session.commit()
+
+
+@scripts.cli.command('getPosts')
+def getPosts():
+    from models import Post
+    posts = Post.query.all()
+
+    for p in posts:
+        print(p.title)
+
+    print(30*'*')
+
+    last = Post.query.order_by(Post.id.desc()).first()
+    try:
+        assert last.title == "First of Admin"  # should be "First of Admin"
+        assert last.id == 2  # should be 3
+    except AssertionError as e:
+        print(e.__str__())

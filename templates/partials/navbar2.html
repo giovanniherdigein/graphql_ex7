@@ -15,7 +15,7 @@
                     <a class="nav-link" href="#">Chat</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link" href="{{url_for('main.profile')}}">Settings</a>
                 </li>
                 {%if current_user.role.id == 2 %}
                 <li class="nav-item">
@@ -27,12 +27,13 @@
                         Actions
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Pricing</a></li>
-                        <li><a class="dropdown-item" href="#">Addition</a></li>
+                        <li><a class="dropdown-item" href="#">User Management</a></li>
+                        <li><a class="dropdown-item" href="#">Server Managent</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Subtraction</a></li>
+                        <li><a class="dropdown-item" href="#">Items Management</a></li>
+                        <li><a class="dropdown-item" href="#">Check Logs</a></li>
                     </ul>
                 </li>
                 {%endif%}

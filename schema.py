@@ -1,7 +1,7 @@
 from graphene import (String, relay, ObjectType, Context,
                       Schema, Mutation, Boolean, Field, Int, ID, InputObjectType, InputField, Argument)
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
-from models import (User, Role, Profile)
+from models import (User, Role, Profile, Post, Comments)
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import db, bcrypt
 from flask import request
@@ -236,6 +236,25 @@ class UploadPicture(Mutation):
         file.save(os.path.join('static/uploads', str(root.id), file.filename))
         # print("File saved %" % file)
         return UploadPicture(ok=True, filename=file.filename)
+
+
+class ChangePassword(Mutation):
+    """Changes the user password """
+    class Arguments:
+        password = String()
+
+    'Fields'
+    ok = Boolean()
+    user = Field(lambda: UserType)
+
+    def mutate(root, info, password, **kwargs):
+        _id = info.context.args.get('userid')
+        user = User.query.get(int(_id))
+        if not check_hash(user.password, password):
+            user.password = password
+            db.session.commit()
+            ok = True
+        return ChangePassword(ok=ok, user=user)
 
 
 class Mutation(ObjectType):
